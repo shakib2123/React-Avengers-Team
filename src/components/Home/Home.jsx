@@ -1,56 +1,56 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Home.css";
 import Cart from "../Cart/Cart";
 
 const Home = () => {
   const [actors, setActors] = useState([]);
   const [selectedActors, setSelectedActors] = useState([]);
-  const [costAmount, setCostAmount] = useState(0);
-  const [totalAmount, setTotalActor] = useState(50000);
+  const [totalCost, setTotalCost] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(50000);
   useEffect(() => {
     fetch("./team.json")
       .then((res) => res.json())
       .then((data) => setActors(data));
   }, []);
-  const handleActorSelection = (actor) => {
+  const handleSelection = (actor) => {
     const isExist = selectedActors.find((item) => item.id === actor.id);
-    let cost = actor.salary;
-
+    let count = actor.salary;
     if (isExist) {
-      return alert("you already selected this actor");
+      return alert("you already selected this actor.");
     } else {
-      selectedActors.forEach((item) => (cost += item.salary));
-      const totalAmount = 50000 - cost;
-      if (cost > 50000) {
-        return alert(
-          "stop you become poor now , become rich then come to hire actor."
-        );
+      selectedActors.forEach((item) => (count += item.salary));
+      const totalAmount = 50000 - count;
+      if (count > 50000) {
+        return alert("Your balance is low.");
       } else {
-        setTotalActor(totalAmount);
-        setCostAmount(cost);
+        setTotalAmount(totalAmount);
+        setTotalCost(count);
         setSelectedActors([...selectedActors, actor]);
       }
     }
   };
   return (
-    <div className="flex flex-col md:flex-row gap-5">
-      <div className="grid gap-5 grid-cols-1 md:grid-cols-3">
+    <div className="flex flex-col md:flex-row gap-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {actors.map((actor) => (
           <div
-            className="text-center border-2 border-amber-600 rounded-lg p-5 space-y-4"
+            className="space-y-3 border-2 border-rose-700 p-4 rounded-lg text-center"
             key={actor.id}
           >
             <figure className="flex justify-center">
-              <img className="w-24 rounded-full" src={actor.image} alt="" />
+              <img
+                className="w-24 rounded-full contrast-100"
+                src={actor.image}
+                alt=""
+              />
             </figure>
-            <h2 className="text-xl">Name: {actor.name}</h2>
-            <h2>Salary: {actor.salary}</h2>
-            <h2>Role: {actor.role}</h2>
-            <h2>Citizen: {actor.country}</h2>
-            <h2>Age: {actor.age}</h2>
+            <h3>Name: {actor.name}</h3>
+            <p>Salary: {actor.salary}</p>
+            <p>Citizen: {actor.country}</p>
+            <p>Role: {actor.role}</p>
+            <p>Age: {actor.age}</p>
             <button
-              onClick={() => handleActorSelection(actor)}
+              onClick={() => handleSelection(actor)}
               className="bg-gradient-to-r from-pink-400 to-yellow-500 hover:from-green-500 hover:to-blue-500 "
             >
               Select
@@ -60,9 +60,8 @@ const Home = () => {
       </div>
       <div>
         <Cart
-          actors={actors}
           selectedActors={selectedActors}
-          costAmount={costAmount}
+          totalCost={totalCost}
           totalAmount={totalAmount}
         ></Cart>
       </div>
